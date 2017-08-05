@@ -30,7 +30,7 @@ public class Agent : MonoBehaviour {
 		if (!moving)
 			return;
 		
-		if(Vector3.Distance(transform.position,CurrentNode.transform.position) > 1f) {
+		if(Vector3.Distance(transform.position,CurrentNode.transform.position) > 0.1f) {
 			MoveToNode ();
 		} else {
 			ReachDestination ();

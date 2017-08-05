@@ -18,13 +18,34 @@ public class NavMesh : MonoBehaviour {
 
 				foreach(GameObject other in nodes) {
 					if(other != obj) {
+						bool obstructed = false;
+
 						RaycastHit hit;
 						Ray newRay = new Ray (obj.transform.position, (other.transform.position - obj.transform.position).normalized);
 						Physics.Raycast (newRay, out hit, Vector3.Distance(obj.transform.position,other.transform.position) + 0.1f);
-						if(hit.collider == null) {
-							node.neighbors.Add (other.GetComponent<NavMeshNode> ());
-						} else {
+						if(hit.collider != null) {
 							Debug.LogError (obj.name + " hit a wall on its way to " + other.name);
+							obstructed = true;
+						}
+
+						Vector3 cross1 = Vector3.Cross ((other.transform.position - obj.transform.position).normalized, Vector3.up);
+						Vector3 cross2 = Vector3.Cross ((obj.transform.position - other.transform.position).normalized, Vector3.up);
+						Vector3[] crosses = new Vector3[]{ cross1, cross2 };
+						foreach(Vector3 cross in crosses) {
+							Vector3 pos1 = obj.transform.position + cross * 0.6f;
+							Vector3 pos2 = other.transform.position + cross * 0.6f;
+
+							RaycastHit hit2;
+							Ray newRay2 = new Ray (pos1, (pos2 - pos1).normalized);
+							Physics.Raycast (newRay2, out hit2, Vector3.Distance(pos1,pos2) + 0.1f);
+							if(hit2.collider != null) {
+								Debug.LogError (obj.name + " hit a wall on its way to " + other.name);
+								obstructed = true;
+							}
+						}
+
+						if(!obstructed) {
+							node.neighbors.Add (other.GetComponent<NavMeshNode> ());
 						}
 					}
 				}
