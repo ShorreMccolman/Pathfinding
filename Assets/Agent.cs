@@ -54,6 +54,10 @@ public class Agent : MonoBehaviour {
 		return Vector3.Distance (current.transform.position, node.transform.position);
 	}
 
+	float DistToGoal(NavMeshNode node) {
+		return Vector3.Distance (node.transform.position, TargetNode.transform.position);
+	}
+
 	void UpdatePath()
 	{
 		if (TargetNode == null)
@@ -80,7 +84,7 @@ public class Agent : MonoBehaviour {
 				if(!costDict.ContainsKey(neighbor) || newCost < costDict[neighbor]) {
 					costDict [neighbor] = newCost;
 
-					frontier.Add (new PriorityNode(neighbor,newCost));
+					frontier.Add (new PriorityNode(neighbor,newCost + DistToGoal(neighbor)));
 					frontier.Sort (delegate(PriorityNode x, PriorityNode y) {
 						return x.priority.CompareTo(y.priority);
 					});
