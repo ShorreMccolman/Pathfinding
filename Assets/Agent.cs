@@ -15,17 +15,26 @@ public struct PriorityNode {
 
 public class Agent : MonoBehaviour {
 
-	public NavMeshNode CurrentNode;
-	public NavMeshNode TargetNode;
+	NavMeshNode CurrentNode;
+	NavMeshNode TargetNode;
 
 	Stack<NavMeshNode> path = new Stack<NavMeshNode>();
 	bool moving = false;
 
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.Space)) {
-			UpdatePath ();
+		if(Input.GetMouseButtonDown(1)) {
+			RaycastHit hit;
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			if(Physics.Raycast(ray, out hit, 100f)) {
+				if(hit.collider.tag == "Navigate") {
+					CurrentNode = NavMesh.Instance.FindBestNode (transform.position);
+					TargetNode = NavMesh.Instance.FindBestNode (hit.point);
+					UpdatePath ();
+				}
+			}
 		}
+
 
 		if (!moving)
 			return;
@@ -39,7 +48,7 @@ public class Agent : MonoBehaviour {
 
 	void MoveToNode()
 	{
-		transform.position += (CurrentNode.transform.position - transform.position).normalized * 3f * Time.deltaTime;
+		transform.position += (CurrentNode.transform.position - transform.position).normalized * 5f * Time.deltaTime;
 	}
 
 	void ReachDestination()

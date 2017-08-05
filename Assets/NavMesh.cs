@@ -24,7 +24,7 @@ public class NavMesh : MonoBehaviour {
 						Ray newRay = new Ray (obj.transform.position, (other.transform.position - obj.transform.position).normalized);
 						Physics.Raycast (newRay, out hit, Vector3.Distance(obj.transform.position,other.transform.position) + 0.1f);
 						if(hit.collider != null) {
-							Debug.LogError (obj.name + " hit a wall on its way to " + other.name);
+							Debug.LogWarning (obj.name + " hit a wall on its way to " + other.name);
 							obstructed = true;
 						}
 
@@ -39,7 +39,7 @@ public class NavMesh : MonoBehaviour {
 							Ray newRay2 = new Ray (pos1, (pos2 - pos1).normalized);
 							Physics.Raycast (newRay2, out hit2, Vector3.Distance(pos1,pos2) + 0.1f);
 							if(hit2.collider != null) {
-								Debug.LogError (obj.name + " hit a wall on its way to " + other.name);
+								Debug.LogWarning (obj.name + " hit a wall on its way to " + other.name);
 								obstructed = true;
 							}
 						}
@@ -64,5 +64,17 @@ public class NavMesh : MonoBehaviour {
 
 	public List<NavMeshNode> nodes = new List<NavMeshNode>();
 
+	public NavMeshNode FindBestNode(Vector3 point) {
+		float bestDistance = 1000f;
+		NavMeshNode best = nodes[0];
+		foreach(NavMeshNode node in nodes) {
+			float distance = Vector3.Distance(node.transform.position,point);
+			if(distance < bestDistance) {
+				best = node;
+				bestDistance = distance;
+			}
+		}
 
+		return best;
+	}
 }
