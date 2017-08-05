@@ -17,7 +17,7 @@ public class NavMesh : MonoBehaviour {
 				node.neighbors.Clear ();
 
 				foreach(GameObject other in nodes) {
-					if(other != obj) {
+					if(other != obj && Vector3.Distance(node.transform.position,other.transform.position) < 6.0f) {
 						bool obstructed = false;
 
 						RaycastHit hit;

@@ -31,6 +31,8 @@ public class Agent : MonoBehaviour {
 					CurrentNode = NavMesh.Instance.FindBestNode (transform.position);
 					TargetNode = NavMesh.Instance.FindBestNode (hit.point);
 					UpdatePath ();
+					ReachDestination ();
+					ReachDestination ();
 				}
 			}
 		}
